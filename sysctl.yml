@@ -1,0 +1,19 @@
+---
+
+- name: Conditional play
+  hosts: all
+  become: true
+  tasks:
+    - name: Set swappiness conditionally
+      sysctl:
+        name: vm.swappiness
+        value: '10'
+        state: present
+      when: ansible_memtotal_mb > 820
+
+    - name: Print error message
+      debug:
+        msg: Server memory less that 2048MB
+      when: ansible_memtotal_mb <= 820
+
+...

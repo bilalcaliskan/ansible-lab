@@ -1,0 +1,12 @@
+[all]
+node[01:04]
+
+[proxy]
+node01
+
+[webservers]
+node02
+node03
+
+[database]
+node04

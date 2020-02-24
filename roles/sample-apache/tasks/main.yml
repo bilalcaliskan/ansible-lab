@@ -1,0 +1,39 @@
+---
+
+- name: Install required packages
+  yum:
+    name: "{{ required_packages }}"
+    state: latest
+
+- name: Ensure firewalld is started and enabled
+  service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Ensure firewalld configuration is correct
+  firewalld:
+    port: "{{ item }}"
+    state: enabled
+    immediate: true
+    permanent: true
+  loop:
+    - 80/tcp
+    - 443/tcp
+
+- name: Ensure httpd is started and enabled
+  service:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: Transfer template file to the remote location
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart httpd
+
+...

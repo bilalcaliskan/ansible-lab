@@ -1,0 +1,14 @@
+---
+
+- name: Selinux role play
+  hosts: webservers
+  become: true
+  roles:
+    - role: rhel-system-roles.selinux
+      vars:
+        selinux_policy: targeted
+        selinux_state: enforcing
+        selinux_booleans:
+          - { name: 'httpd_can_network_connect', state: 'on', persistent: 'yes' }
+
+...

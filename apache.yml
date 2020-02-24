@@ -1,0 +1,11 @@
+---
+
+- name: Apache role execution
+  hosts: webservers
+  roles:
+    - role: sample-apache
+      vars:
+        empty_var: true
+      become: true
+
+...

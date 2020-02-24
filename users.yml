@@ -1,0 +1,40 @@
+---
+
+- name: Users play 
+  hosts: all
+  become: true
+  vars_files:
+    - secret.yml
+    - vars/user_list.yml
+  tasks:
+    - name: Create users whose id starts with 1 on webservers
+      user:
+        name: "{{ item.username }}"
+        uid: "{{ item.uid }}"
+        append: true
+        groups: wheel
+        shell: /bin/bash
+        generate_ssh_key: true
+        force: true
+        password: "{{ user_password | password_hash('sha512', 'mysecretsalt') }}"
+      loop: "{{ users }}"
+      when: 
+        - item.uid is regex("1.*.")
+        - inventory_hostname in groups['webservers']
+
+    - name: Create users whose id starts with 1 on webservers
+      user:
+        name: "{{ item.username }}"
+        uid: "{{ item.uid }}"
+        append: true
+        groups: wheel
+        shell: /bin/bash
+        generate_ssh_key: true
+        force: true
+        password: "{{ user_password | password_hash('sha512', 'mysecretsalt') }}"
+      loop: "{{ users }}"
+      when: 
+        - item.uid is regex("2.*.")
+        - inventory_hostname in groups['database']
+
+...

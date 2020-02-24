@@ -1,0 +1,22 @@
+---
+
+- name: Create custom facts play
+  hosts: database
+  become: true
+  tasks:
+    - name: Create the remote directory
+      file:
+        state: directory
+        recurse: true
+        path: /etc/ansible/facts.d
+
+    - name: Install custom facts to the managed node
+      copy:
+        src: custom.fact
+        dest: /etc/ansible/facts.d
+
+    - name: Print custom fact
+      debug:
+        var: "{{ ansible_facts.ansible_local.custom.sample_exam.server_role }}"
+
+...

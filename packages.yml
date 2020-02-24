@@ -1,0 +1,25 @@
+---
+
+- name: Packages play
+  hosts: all
+  become: true
+  tasks:
+    - name: Install tcpdump and mailx packages
+      yum:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - tcpdump
+        - mailx
+      when: inventory_hostname in groups['proxy']
+
+    - name: Install lsof and mailx packages
+      yum:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - lsof
+        - mailx
+      when: inventory_hostname in groups['database']
+
+...

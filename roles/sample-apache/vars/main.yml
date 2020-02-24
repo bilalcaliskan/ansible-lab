@@ -1,0 +1,9 @@
+---
+
+required_packages:
+  - httpd
+  - mod_ssl
+  - php
+  - firewalld
+
+...

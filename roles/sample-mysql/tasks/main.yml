@@ -1,0 +1,87 @@
+---
+
+- name: Ensure correct partition exists
+  parted:
+    device: /dev/sdb
+    label: gpt
+    number: 1
+    part_start: '1MB'
+    part_end: '801MB'
+    state: present
+
+- name: Ensure volume group exists
+  lvg:
+    vg: vg_database
+    pvs: /dev/sdb1
+    state: present
+
+- name: Ensure logical volume exists
+  lvol:
+    vg: vg_database
+    lv: lv_mysql
+    size: 512M
+    state: present
+ 
+- name: Ensure filesystem is created
+  filesystem:
+    dev: /dev/vg_database/lv_mysql
+    fstype: xfs
+ 
+- name: Ensure logical volume is mounted
+  mount:
+    src: /dev/vg_database/lv_mysql
+    path: /mnt/mysql_backups
+    state: mounted
+    fstype: xfs
+ 
+#- name: Ensure rpm package is installed
+#  yum:
+#     name: mysql-community-server
+#    state: latest
+#    disablerepo: AppStream
+#    enablerepo: mysql56-community
+
+- name: Ensure firewalld is installed
+  yum:
+    name: firewalld
+    state: latest
+
+- name: Ensure firewalld is started and enabled
+  service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Ensure mysql ports are allowed on firewall
+  firewalld:
+    port: 3306/tcp
+    state: enabled
+    immediate: true
+    permanent: true
+ 
+- name: Ensure mysqld is started and enabled
+  service:
+    name: mysqld
+    state: started
+    enabled: true
+
+- name: Install required python module for mysql_user module
+  pip:
+    name: PyMySQL
+
+- name: Grant privileges for root user
+  mysql_user:
+    name: root
+    password: "{{ database_password }}"
+  ignore_errors: true
+
+- name: Ensure correct configuration file is transferred
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart mysqld
+
+...

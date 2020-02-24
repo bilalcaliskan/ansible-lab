@@ -1,0 +1,24 @@
+- src: yatesr.timezone
+
+- src: https://some.webserver.example.com/files/master.tar.gz
+  name: http-role-gz
+
+# from a webserver, where the role is packaged in a tar.bz2
+- src: https://some.webserver.example.com/files/master.tar.bz2
+  name: http-role-bz2
+
+- src: https://some.webserver.example.com/files/master.tar.xz
+  name: http-role-xz
+
+# from Bitbucket
+- src: git+https://bitbucket.org/willthames/git-ansible-galaxy
+  version: v1.4
+
+# from Bitbucket, alternative syntax and caveats
+- src: https://bitbucket.org/willthames/hg-ansible-galaxy
+  scm: hg
+
+# from GitLab or other git-based scm, using git+ssh
+- src: git@gitlab.company.com:mygroup/ansible-base.git
+  scm: git
+  version: "0.1"  # quoted, so YAML doesn't parse this as a floating-point value

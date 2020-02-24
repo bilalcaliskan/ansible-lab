@@ -1,0 +1,22 @@
+---
+
+- name: Configure ssh server play
+  hosts: all
+  become: true
+  vars:
+    changes:
+      - change: 'X11Forwarding no'
+        regex: '^X11Forwarding'
+      - change: 'Banner /etc/motd'
+        regex: '^Banner'
+      - change: 'MaxAuthTries 3'
+        regex: '^MaxAuthTries'
+  tasks:
+    - name: Set changes
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '{{ item.regex }}'
+        line: '{{ item.change }}'
+      loop: '{{ changes }}'
+
+...

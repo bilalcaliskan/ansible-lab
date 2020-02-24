@@ -1,0 +1,25 @@
+---
+
+- name: Motd play
+  hosts: all
+  become: true
+  tasks:
+    - name: Generate motd for proxy hosts
+      copy:
+        content: "Welcome to HaProxy server"
+        dest: /etc/motd
+      when: inventory_hostname in groups['proxy']
+
+    - name: Generate motd for webserver hosts
+      copy:
+        content: "Welcome to Apache server"
+        dest: /etc/motd
+      when: inventory_hostname in groups['webservers']
+
+    - name: Generate motd for database hosts
+      copy:
+        content: "Welcome to MySQL server"
+        dest: /etc/motd
+      when: inventory_hostname in groups['database']
+
+...

@@ -1,0 +1,19 @@
+---
+
+- name: Archiving play
+  hosts: database
+  become: true
+  tasks:
+    - name: Create file with content
+      copy:
+        content: 'dev,test,qa,prod'
+        dest: /mnt/mysql_backups/database_list.txt
+
+    - name: Archive the file
+      archive:
+        path: /mnt/mysql_backups/database_list.txt
+        dest: /mnt/mysql_backups/archive.tar.gz
+        format: gz
+        force_archive: true
+
+...

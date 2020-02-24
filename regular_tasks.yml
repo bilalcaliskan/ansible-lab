@@ -1,0 +1,15 @@
+---
+
+- name: Regular tasks play
+  hosts: proxy
+  become: true
+  tasks:
+    - name: Crontab
+      cron:
+        minute: 0
+        job: "date >> /var/log/time.log"
+        name: "print date"
+        cron_file: ansible_date
+        user: root
+
+...

@@ -1,0 +1,30 @@
+---
+
+- name: Special permissions playbook
+  hosts: all:!proxy:&webservers
+  tasks:
+    - name: Create the log directory with setuid bit
+      file:
+        path: /home/ansible/logdir-suid
+        owner: ansible
+        group: ansible
+        state: directory
+        mode: 04750
+
+    - name: Create the log directory with setguid bit
+      file:
+        path: /home/ansible/logdir-guid
+        owner: ansible
+        group: ansible
+        state: directory
+        mode: 02750
+
+    - name: Create the log directory with sticky bit
+      file:
+        path: /home/ansible/logdir-sticky
+        owner: ansible
+        group: ansible
+        state: directory
+        mode: 01750
+
+...

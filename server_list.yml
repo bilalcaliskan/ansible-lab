@@ -1,0 +1,16 @@
+---
+
+- name: Server list play
+  hosts: database
+  become: true
+  tasks:
+    - name: Transfer template file to the remote location
+      template:
+        src: templates/server_list.j2
+        dest: /etc/server_list.txt
+        mode: 0600
+        owner: ansible
+        group: ansible
+        setype: net_conf_t
+
+...
